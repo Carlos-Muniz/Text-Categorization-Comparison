@@ -21,6 +21,8 @@ The major steps of Text Categorization are:
 * Recall (micro & macro)
 * F1 (micro & macro)
 
+![Text Categorization Comparison](https://github.com/Carlos-Muniz/Text-Categorization-Comparison/blob/master/RESULTS/eval_results.png)
+
 ## Installation
 
 1) Use the package, dependency and environment management system [conda](https://www.anaconda.com/products/individual) to install all dependencies.
