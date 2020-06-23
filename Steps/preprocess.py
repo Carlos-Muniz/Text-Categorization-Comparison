@@ -23,6 +23,7 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfVectorizer
 
+
 # Loads the raw text and labels from the Reuters Corpus in to separate
 # Training and Testing Dataframes
 def load_data():
@@ -84,16 +85,6 @@ def tfidf_vectorization(train, test, n=1000):
     # Save vectors
     np.save('DATA/train_tfidf_X', train_X)
     np.save('DATA/test_tfidf_X', test_X)
-
-
-# Vectorizes and saves the training and Testing data using Doc2Vec
-def doc2vec_vectorization(train, test):
-    pass
-
-
-# Vectorizes and saves the training and testing data using SkipThoughts
-def skipthoughts_vectorization(train, test):
-    pass
 
 
 # Maps labels for classification and writes to file
