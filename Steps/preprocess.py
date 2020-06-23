@@ -21,7 +21,7 @@ from nltk.corpus import stopwords
 from matplotlib import pyplot as plt
 from sklearn.preprocessing import LabelEncoder
 from sklearn.feature_extraction.text import CountVectorizer
-
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 # Loads the raw text and labels from the Reuters Corpus in to separate
 # Training and Testing Dataframes
@@ -76,8 +76,14 @@ def bagofwords_vectorization(train, test, n=1000):
 
 
 # Vectorizes and saves the training and testing data using TFIDF
-def tfidf_vectorization(train, test):
-    pass
+def tfidf_vectorization(train, test, n=1000):
+    vectorizer = TfidfVectorizer(stop_words='english', max_features=n)
+    # Vectorization
+    train_X = vectorizer.fit_transform(train['text'].values).toarray()
+    test_X = vectorizer.transform(test['text'].values).toarray()
+    # Save vectors
+    np.save('DATA/train_tfidf_X', train_X)
+    np.save('DATA/test_tfidf_X', test_X)
 
 
 # Vectorizes and saves the training and Testing data using Doc2Vec
@@ -116,3 +122,5 @@ def preprocess():
     labels_mapping(train, test)
     # Bag of Words
     bagofwords_vectorization(train, test)
+    # TFIDF
+    tfidf_vectorization(train, test)

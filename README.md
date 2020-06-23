@@ -10,10 +10,13 @@ The major steps of Text Categorization are:
 
 ### Vectorization techniques:
 * Bag of Words
+* TFIDF
 
 ### Models:
 * Sklearn's Logistic Regression Classifier
 * Sklearn's Linear Support Vector Classifier
+* Sklearn's Passive Agressive Classifier
+* Sklearn's SGD Classifier using Elasticnet Penalty
 
 ### Evaluation Statistics:
 * Accuracy

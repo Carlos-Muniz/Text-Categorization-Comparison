@@ -29,13 +29,13 @@ def evaluate(results_path, test_y):
         scores.append([
             mname, r, accuracy_score(test_y, results[r]),
             precision_score(test_y, results[r], average='micro',
-                            zero_division=0),
-            recall_score(test_y, results[r], average='micro', zero_division=0),
-            f1_score(test_y, results[r], average='micro', zero_division=0),
+                            zero_division=1),
+            recall_score(test_y, results[r], average='micro', zero_division=1),
+            f1_score(test_y, results[r], average='micro', zero_division=1),
             precision_score(test_y, results[r], average='macro',
-                            zero_division=0),
-            recall_score(test_y, results[r], average='macro', zero_division=0),
-            f1_score(test_y, results[r], average='macro', zero_division=0)
+                            zero_division=1),
+            recall_score(test_y, results[r], average='macro', zero_division=1),
+            f1_score(test_y, results[r], average='macro', zero_division=1)
         ])
     return scores
 
@@ -51,11 +51,13 @@ def evaluation():
         'precision_macro', 'recall_macro', 'f1_macro'
     ]
     scores = pd.DataFrame(all_results, columns=cols).sort_values('accuracy')
+    scores.to_csv('RESULTS/eval_results.csv')
     modvecs = scores['model'] + '\n' + scores['vectorization']
     ax = scores.plot.bar()
     plt.grid(b=True, axis='y', which='major')
+    ax.legend(loc='upper center', bbox_to_anchor=(0.5, 1.20),
+              ncol=4, fancybox=True, shadow=False)
+    # ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
     ax.set_yticks(np.arange(0, 1.1, 0.1))
-    ax.set_xticklabels(modvecs, rotation=0)
-    plt.title('Evaluation Results')
+    ax.set_xticklabels(modvecs, rotation=45)
     plt.savefig('RESULTS/eval_results.png', bbox_inches='tight')
-    # pdb.set_trace()
