@@ -18,12 +18,16 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.naive_bayes import ComplementNB
 from sklearn.linear_model import PassiveAggressiveClassifier
 from sklearn.linear_model import SGDClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.linear_model import Perceptron
+from sklearn.neural_network import MLPClassifier
 
 
 def logreg_models(x_paths, train_y):
     models = {}
     for f in x_paths:
-        fname = f.split('_')[1]
+        fname = "_".join(f.split('_')[1:3])
         train_x = np.load(f, allow_pickle=True)
         models[fname] = LogisticRegression(random_state=1, max_iter=1000)
         models[fname].fit(train_x, train_y)
@@ -34,7 +38,7 @@ def logreg_models(x_paths, train_y):
 def linsvc_models(x_paths, train_y):
     models = {}
     for f in x_paths:
-        fname = f.split('_')[1]
+        fname = "_".join(f.split('_')[1:3])
         train_x = np.load(f, allow_pickle=True)
         models[fname] = LinearSVC(random_state=1)
         models[fname].fit(train_x, train_y)
@@ -45,7 +49,7 @@ def linsvc_models(x_paths, train_y):
 def pasagg_models(x_paths, train_y):
     models = {}
     for f in x_paths:
-        fname = f.split('_')[1]
+        fname = "_".join(f.split('_')[1:3])
         train_x = np.load(f, allow_pickle=True)
         models[fname] = PassiveAggressiveClassifier(random_state=1)
         models[fname].fit(train_x, train_y)
@@ -56,11 +60,57 @@ def pasagg_models(x_paths, train_y):
 def sgdclf_models(x_paths, train_y):
     models = {}
     for f in x_paths:
-        fname = f.split('_')[1]
+        fname = "_".join(f.split('_')[1:3])
         train_x = np.load(f, allow_pickle=True)
         models[fname] = SGDClassifier(random_state=1, penalty='elasticnet')
         models[fname].fit(train_x, train_y)
     with open('MODELS/sklearn_sgdclf.pkl', 'wb') as fout:
+        pickle.dump(models, fout)
+
+
+def ranfor_models(x_paths, train_y):
+    models = {}
+    for f in x_paths:
+        fname = "_".join(f.split('_')[1:3])
+        train_x = np.load(f, allow_pickle=True)
+        models[fname] = RandomForestClassifier(random_state=1)
+        models[fname].fit(train_x, train_y)
+    with open('MODELS/sklearn_ranfor.pkl', 'wb') as fout:
+        pickle.dump(models, fout)
+
+
+def percep_models(x_paths, train_y):
+    models = {}
+    for f in x_paths:
+        fname = "_".join(f.split('_')[1:3])
+        train_x = np.load(f, allow_pickle=True)
+        models[fname] = Perceptron(random_state=1)
+        models[fname].fit(train_x, train_y)
+    with open('MODELS/sklearn_percep.pkl', 'wb') as fout:
+        pickle.dump(models, fout)
+
+
+def knnclf_models(x_paths, train_y):
+    models = {}
+    for f in x_paths:
+        fname = "_".join(f.split('_')[1:3])
+        train_x = np.load(f, allow_pickle=True)
+        models[fname] = KNeighborsClassifier(n_neighbors=10)
+        models[fname].fit(train_x, train_y)
+    with open('MODELS/sklearn_knnclf.pkl', 'wb') as fout:
+        pickle.dump(models, fout)
+
+
+def mlpclf_models(x_paths, train_y):
+    models = {}
+    for f in x_paths:
+        a, b = f.split('_')[1:3]
+        fname = "_".join([a, b])
+        train_x = np.load(f, allow_pickle=True)
+        lyrs = (int(b) // 2, np.unique(train_y).shape[0])
+        models[fname] = MLPClassifier(random_state=1, hidden_layer_sizes=lyrs)
+        models[fname].fit(train_x, train_y)
+    with open('MODELS/sklearn_mlpclf.pkl', 'wb') as fout:
         pickle.dump(models, fout)
 
 
@@ -75,6 +125,14 @@ def train():
     pasagg_models(train_x_paths, train_y)
     # SGD Classifier with Elasticnet penalty
     sgdclf_models(train_x_paths, train_y)
+    # Random Forest Classifier
+    ranfor_models(train_x_paths, train_y)
+    # Perceptron
+    percep_models(train_x_paths, train_y)
+    # K-Nearest Neighbors
+    knnclf_models(train_x_paths, train_y)
+    # Multi-Layer Perceptron Classifier
+    mlpclf_models(train_x_paths, train_y)
 
 
 def test_models(x_paths, model_path):
@@ -82,7 +140,7 @@ def test_models(x_paths, model_path):
     with open(model_path, 'rb') as fin:
         models = pickle.load(fin)
     for f in x_paths:
-        fname = f.split('_')[1]
+        fname = "_".join(f.split('_')[1:3])
         test_x = np.load(f, allow_pickle=True)
         results[fname] = models[fname].predict(test_x)
     results_path = 'RESULTS/' + basename(model_path)

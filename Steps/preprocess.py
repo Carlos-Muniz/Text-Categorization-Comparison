@@ -72,8 +72,8 @@ def bagofwords_vectorization(train, test, n=1000):
     train_X = vectorizer.fit_transform(train['text'].values).toarray()
     test_X = vectorizer.transform(test['text'].values).toarray()
     # Save vectors
-    np.save('DATA/train_bagofwords_X', train_X)
-    np.save('DATA/test_bagofwords_X', test_X)
+    np.save('DATA/train_bagofwords_{0}_X'.format(n), train_X)
+    np.save('DATA/test_bagofwords_{0}_X'.format(n), test_X)
 
 
 # Vectorizes and saves the training and testing data using TFIDF
@@ -83,8 +83,8 @@ def tfidf_vectorization(train, test, n=1000):
     train_X = vectorizer.fit_transform(train['text'].values).toarray()
     test_X = vectorizer.transform(test['text'].values).toarray()
     # Save vectors
-    np.save('DATA/train_tfidf_X', train_X)
-    np.save('DATA/test_tfidf_X', test_X)
+    np.save('DATA/train_tfidf_{0}_X'.format(n), train_X)
+    np.save('DATA/test_tfidf_{0}_X'.format(n), test_X)
 
 
 # Maps labels for classification and writes to file
@@ -111,7 +111,8 @@ def preprocess():
     token_analysis(train, test)
     # Encode labels
     labels_mapping(train, test)
-    # Bag of Words
-    bagofwords_vectorization(train, test)
-    # TFIDF
-    tfidf_vectorization(train, test)
+    for num in [500, 1000, 2000]:
+        # Bag of Words
+        bagofwords_vectorization(train, test, n=num)
+        # TFIDF
+        tfidf_vectorization(train, test, n=num)

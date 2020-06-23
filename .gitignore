@@ -1,0 +1,8 @@
+# DON"T TRACK
+
+# Files of thes types
+*.pkl
+*.npy
+
+# And this directory
+Steps/__pycache__
